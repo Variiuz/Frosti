@@ -13,10 +13,10 @@ module.exports = {
         if(args.length === 1){
             const querystring = args[0];
             var body = null;
-            fetch(`https://afterfall.api.frostfightstudios.com/callback/characters/name/`+querystring, {
+            fetch(`https://api.afterfall-game.com/callback/characters/name/`+querystring, {
                 headers: {
                      'Content-Type': 'application/json',
-                     'Authorization': 'Bearer '+config.AFAPIT
+                     'Authorization': 'Bearer '+config.AFAPIT,
                     }
             }).then(response => 
                 response.json()).then(json => {

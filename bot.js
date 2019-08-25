@@ -12,7 +12,7 @@ for (const file of commandFiles) {
 	client.commands.set(command.name, command);
 }
 
-client.on('ready', () => {
+client.on('ready', async () => {
 		const promises = [
 			client.shard.fetchClientValues('guilds.size'),
 			client.shard.broadcastEval('this.guilds.reduce((prev, guild) => prev + guild.memberCount, 0)')
@@ -20,12 +20,19 @@ client.on('ready', () => {
 		Promise.all(promises).then(results => {
 			const totalGuilds = results[0].reduce((prev, guildCount) => prev + guildCount, 0);
 			const totalMembers = results[1].reduce((prev, memberCount) => prev + memberCount, 0);
-			console.log('ShardClient (id '+shardServer.id+') hooking into Bot ' + client.user.username + ' with '+ totalGuilds+ ' Guilds and '+ totalMembers+ ' Members in total.');
+			console.log('ShardClient (id '+shardServer.id+') hooking into ' + client.user.username + ' with '+ totalGuilds+ ' Guilds and '+ totalMembers+ ' Members in total.');
 			}).catch(console.error);
   client.user.setActivity(config.presence.text, {
 		"type": config.presence.statuscode
 	});
   avatar = client.user.avatarURL;
+});
+client.on('userUpdate', (oldUser, newUser)=> {
+	if(newUser.username === 'here' || newUser.username === 'heree' || newUser.username === 'hereee' || newUser.username === 'everyone'|| newUser.username === 'everyonee'|| newUser.username === 'everyoneee'){
+		newUser.createDM().then(createdDM =>{
+			createdDM.send('I\'ve noticed that you changed your Username to something with "here" or "everyone". Please change it or you will be kicked from our Server. You have been flagged.');
+		});
+	}
 });
 //https://discordapp.com/oauth2/authorize?client_id=564484610583691264&permissions=8&scope=bot
 client.on('message', message => {
