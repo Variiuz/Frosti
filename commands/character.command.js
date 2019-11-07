@@ -13,7 +13,7 @@ module.exports = {
         if(args.length === 1){
             const querystring = args[0];
             var body = null;
-            fetch(`https://api.afterfall-game.com/callback/characters/name/`+querystring, {
+            fetch(`https://api.afterfall-game.com/v2/api/character/name/`+querystring, {
                 headers: {
                      'Content-Type': 'application/json',
                      'Authorization': 'Bearer '+config.AFAPIT,
@@ -68,7 +68,13 @@ module.exports = {
                              });
                         }
                     }
-                }).catch(err => console.log(err));
+                }).catch(err => {
+                    embeded.setColor(config.color)
+                    .setDescription('There is something wrong with the API route. The error has been logged for further investigations.');
+                    console.log('Error while fetching a Char. ERROR: ');
+                    
+                    console.log(err)
+                });
         }else if(args.length === 0){
             embeded.setColor(config.color)
             .setDescription('Please give me a Charactername for the search.');

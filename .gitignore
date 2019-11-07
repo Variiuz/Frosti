@@ -4,3 +4,4 @@
 #We don't want Keys to be leaked right ^^
 *.pem
 /nodemon.json
+/CONFIG.json.mk
