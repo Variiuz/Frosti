@@ -3,86 +3,106 @@ const client2 = new Discord.Client();
 const config = require('../CONFIG.json');
 const fetch = require('node-fetch');
 var deleteMessage = false;
+async function getTitle(id) {
+    let response = await fetch(`https://api.afterfall-game.com/v3/api/title/`+ id, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+config.AfterfallToken,
+           }
+    });
+    let data = await response.json()
+    return response.status
+}
 module.exports = {
     name: "character",
     cooldown: 10,
-    description: "Show some Information about the given Charactername.",
-    execute(message, args, client ){
-        const avatar = client.user.avatarURL;
-        const embeded = new Discord.RichEmbed();
+    description: "Show some Information about the given name.",
+    async execute(message, args, client ){
+        const embedded = new Discord.RichEmbed();
         if(args.length === 1){
             const querystring = args[0];
             var body = null;
-            fetch(`https://api.afterfall-game.com/v2/api/character/name/`+querystring, {
+            let status;
+            console.log(querystring);
+            
+            fetch(`https://api.afterfall-game.com/v3/api/search/character/name/`+querystring, {
                 headers: {
                      'Content-Type': 'application/json',
-                     'Authorization': 'Bearer '+config.AFAPIT,
+                     'Authorization': 'Bearer '+config.AfterfallToken,
                     }
-            }).then(response => 
-                response.json()).then(json => {
-                    if(json.response !== 'OK'){
-                        if(json.message === 'Character not found.'){
-                            embeded.setColor(config.color)
-                            .setDescription('A Character with the name '+args[0]+ ' could not be found.');
+            }).then((res) => {
+                status = res.status;
+                return res.json();
+            }).then(json => {
+                    if(status !== 200){
+                        if(status === 404){
+                            embedded.setColor(config.color)
+                            .setDescription('A Character with the name '+args[0]+ ' could not be found or is set private.');
+                            message.channel.send(embedded);
                         }else {
-                            embeded.setColor(config.color)
+                            embedded.setColor(config.color)
                             .setDescription('There is something wrong with our API Endpoint. Please try again in a few minutes.');
+                            message.channel.send(embedded);
                             console.log(json);
                         }
                     }else {
-                        var rowCount = json.rowCount;
-                        if(rowCount === 1){
-                            embeded.setColor(config.color)
-                            .setTitle('Character Lookup')
-                            .setDescription('Character Result for '+json['characters'][0].name)
-                            .addBlankField()
-                            .addField('Name', json['characters'][0].name, true)
-                            .addField('Level', json['characters'][0].level, true)
-                            .addField('Playtime', json['characters'][0].playtime, true)
-                            .addBlankField()
-                            .addField('Created', json['characters'][0].created.split('T')[0], true)
+                        const charName = json['name'];
+                        const charUiD = json['character_uid'];
+                        const charCreatedAt = json['created'];
+                        const charPlayTime = json['playtime'];
+                        const charLevel = json['level'];
+                        const charDZ = json['dz_level'];
+                        const charTitleId = json['title_id']; // For further requests.
+                        let charTitle;
+                        fetch(`https://api.afterfall-game.com/v3/api/title/`+ charTitleId, {
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer '+config.AfterfallToken,
+                               }
+                        }).then((res) => {
+                            status = res.status;
+                            return res.json();
+                        }).then(js => {
+                            if(status === 200){
+                                charTitle = js['name'];
+                            }else {
+                                charTitle = "Unknown";
+                            }
+                            embedded.setColor(config.color)
+                            .setTitle('Character '+charName)
+                            .setDescription('Information about  '+charName)
+                            .addField('Name',charName, true)
+                            .addField('Exp', charLevel, true)
+                            .addField('DZ Exp', charDZ, true)
+                            .addField('Current Title', charTitle, true)
+                            .addField('Playtime', charPlayTime, true)
+                            .addField('Created', charCreatedAt.split('T')[0], true)
                             .setTimestamp()
                             .setFooter('requested by ' +message.author.username, message.author.avatarURL);
-                            message.channel.send(embeded);
-                        }else {
-                            if(rowCount > 5)rowCount = 5;
-                            var array = [];
-                            for(var i = 0; i < (rowCount);i++){
-                                array.push(json['characters'][i]);
-                             }
-                             message.reply('Character Result for name '+args[0]+ ' returned '+rowCount+ ' entries. Multiple Characters are currently just supported by showing them all.');
-                             array.forEach(sysp =>{
-                                var embed = new Discord.RichEmbed();
-                                embed.setColor(config.color)
-                                .setTitle('Character Lookup')
-                                .setDescription('Character Result for '+sysp.name)
-                                .addBlankField()
-                                .addField('Name', sysp.name, true)
-                                .addField('Level', sysp.level, true)
-                                .addField('Playtime', sysp.playtime, true)
-                                .addBlankField()
-                                .addField('Created', sysp.created.split('T')[0], true)
-                                .setTimestamp()
-                                .setFooter('requested by ' +message.author.username, message.author.avatarURL);
-                                message.channel.send(embed);
-                             });
-                        }
+                            message.channel.send(embedded);
+                        }).catch(err => {
+                            embedded.setColor(config.color)
+                            .setDescription('There was an error while fetching the current Character Title.');
+                            message.channel.send(embedded);
+                            console.log("TitleErr: "+err);
+                        });
                     }
                 }).catch(err => {
-                    embeded.setColor(config.color)
+                    embedded.setColor(config.color)
                     .setDescription('There is something wrong with the API route. The error has been logged for further investigations.');
+                    message.channel.send(embedded);
                     console.log('Error while fetching a Char. ERROR: ');
                     
-                    console.log(err)
+                    console.log(err);
                 });
         }else if(args.length === 0){
-            embeded.setColor(config.color)
+            embedded.setColor(config.color)
             .setDescription('Please give me a Charactername for the search.');
-            message.channel.send(embeded);
+            message.channel.send(embedded);
         }else {
-            embeded.setColor(config.color)
+            embedded.setColor(config.color)
             .setDescription('Please give me a Charactername for the search.');
-            message.channel.send(embeded);
+            message.channel.send(embedded);
         }
     }
 }

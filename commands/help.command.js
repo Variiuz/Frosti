@@ -6,13 +6,13 @@ module.exports = {
     description: "Shows the Helppage",
     execute(message, args, client ){
         const avatar = client.user.avatarURL;
-        const embeded = new Discord.RichEmbed();
+        const embedded = new Discord.RichEmbed();
         console.log(args);
         if(args.length === 1){
             const site = args[0];
             switch (args[0]) {
                 default:
-                    embeded.setColor(config.color)
+                    embedded.setColor(config.color)
                     .setTitle('')
                     .setAuthor('FrostBot', avatar)
                     .setDescription('Help Command <:Frosti:563030711905419289>')
@@ -24,7 +24,7 @@ module.exports = {
                     break;
             }
         }else if(args.length === 0){
-            embeded.setColor(config.color)
+            embedded.setColor(config.color)
             .setTitle('')
             .setAuthor('FrostBot', avatar)
             .setDescription('Help Command <:Frosti:563030711905419289>')
@@ -34,7 +34,7 @@ module.exports = {
             .setTimestamp()
             .setFooter('requested by ' +message.author.username, message.author.avatarURL);
         }else {
-            embeded.setColor(config.color)
+            embedded.setColor(config.color)
             .setTitle('')
             .setAuthor('FrostBot', avatar)
             .setDescription('Help Command <:Frosti:563030711905419289>')
@@ -44,6 +44,6 @@ module.exports = {
             .setTimestamp()
             .setFooter('requested by ' +message.author.username, message.author.avatarURL);
         }
-        message.channel.send(embeded);
+        message.channel.send(embedded);
     }
 }

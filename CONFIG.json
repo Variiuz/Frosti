@@ -1,14 +1,14 @@
 {
     "prefix": "-",
     "username": "Frosti",
-    "token": "NTQzOTE0NTY4MjY3ODU3OTMw.XKorBQ.DfzyWa49jKxWvpujA28HqjrIEfw",
-    "clientid": "543914568267857930",
-    "clientsecret": "PRBputSVZJa8mGXpi0frZ7k3LjIbDL6y",
+    "token": "<discord_token> #The ones in older commits are invalid",
+    "clientid": "<ClientID>",
+    "clientsecret": "<discord_secret> #The ones in older commits are invalid",
     "ownerid": "188378192631955457",
     "presence": {
         "text": "Afterfall",
         "statuscode": "PLAYING"
     },
     "color": "#1da1f2",
-    "AFAPIT": "0dg2hj2mapdprikcsoer2dn3bjs31e3ic9q3fse7c09kpk06prc4pla"
+    "AfterfallToken": "<afterfall_api_accesstoken> #The ones in older commits are invalid"
 }

@@ -1,12 +1,12 @@
-const Discord = require('discord.js');
-const fs = require('fs');
-const client = new Discord.Client();
+import { Client, Collection } from 'discord.js';
+import { readdirSync } from 'fs';
+const client = new Client();
 var avatar = '';
-const config = require('./CONFIG.json');
+import { presence, prefix, token } from './CONFIG.json';
 const shardServer = client.shard;
-client.commands = new Discord.Collection();
-const cooldowns = new Discord.Collection();
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+client.commands = new Collection();
+const cooldowns = new Collection();
+const commandFiles = readdirSync('./commands').filter(file => file.endsWith('.js'));
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
 	client.commands.set(command.name, command);
@@ -22,8 +22,8 @@ client.on('ready', async () => {
 			const totalMembers = results[1].reduce((prev, memberCount) => prev + memberCount, 0);
 			console.log('ShardClient (id '+shardServer.id+') hooking into ' + client.user.username + ' with '+ totalGuilds+ ' Guilds and '+ totalMembers+ ' Members in total.');
 			}).catch(console.error);
-  client.user.setActivity(config.presence.text, {
-		"type": config.presence.statuscode
+  client.user.setActivity(presence.text, {
+		"type": presence.statuscode
 	});
   avatar = client.user.avatarURL;
 });
@@ -37,7 +37,7 @@ client.on('userUpdate', (oldUser, newUser)=> {
 //https://discordapp.com/oauth2/authorize?client_id=564484610583691264&permissions=8&scope=bot
 client.on('message', message => {
 
-	if (!message.content.startsWith(config.prefix)) return;
+	if (!message.content.startsWith(prefix)) return;
 	if(message.channel.id === '582613034434822164' && message.content.startsWith('-verify ')){
 		const uid = message.content.replace('-verify ', '');
 		const userVer= message.guild.members.find('id', uid);
@@ -46,25 +46,25 @@ client.on('message', message => {
 			userVer.removeRole('582610398151442447').catch(err => {
 			});
 			userVer.createDM().then(createdDM =>{
-				createdDM.send('Removed the Verified Role <:sirblob:532942921759195166>');
+				createdDM.send('Removed the Verified Role <:Afterfall:648901508838064138>');
 			});
 		}else{
 			userVer.addRole('582610398151442447').catch(err => {
 			});
 			userVer.createDM().then(createdDM =>{
-				createdDM.send('Added the Verified Role <:sirblob:532942921759195166>');
+				createdDM.send('Added the Verified Role <:Afterfall:648901508838064138>');
 			});
 		}
 	}
 	if(message.author.bot)return;
 
-	const args = message.content.slice(config.prefix.length).split(/ +/);
+	const args = message.content.slice(prefix.length).split(/ +/);
 	const commandName = args.shift().toLowerCase();
 	if (!client.commands.has(commandName)) return;
 	const command = client.commands.get(commandName);
 	try {
 		if (!cooldowns.has(command.name)) {
-			cooldowns.set(command.name, new Discord.Collection());
+			cooldowns.set(command.name, new Collection());
 		}
 		const now = Date.now();
 		const timestamps = cooldowns.get(command.name);
@@ -115,4 +115,4 @@ client.on('message', message => {
 	}*/
 });
 
-client.login(config.token);
+client.login(token);
