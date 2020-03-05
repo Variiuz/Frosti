@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const client2 = new Discord.Client();
-const config = require('../CONFIG.json');
+const config = require('../BotConfig.json');
 module.exports = {
     name: "help",
     description: "Shows the Helppage",

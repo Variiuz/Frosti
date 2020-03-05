@@ -1,5 +1,5 @@
 import { ShardingManager } from 'discord.js';
-import { token as _token } from './CONFIG.json';
+import { token as _token } from './BotConfig.json';
 const manager = new ShardingManager('./bot.js', { token: _token});
 
 manager.spawn();

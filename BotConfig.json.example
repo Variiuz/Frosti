@@ -1,0 +1,14 @@
+{
+    "prefix": "-",
+    "username": "username will be changed when used in production by us",
+    "token": "Bot Token",
+    "clientid": "Bots clientid",
+    "clientsecret": "Bots client secret",
+    "ownerid": "Bot Owner",
+    "presence": {  ->remove-> This is used to customize the RP without searching the codebase
+        "text": "Afterfall",
+        "type": "PLAYING"
+    },
+    "color": "#1da1f2",
+    "AfterfallToken": "Token for the access to the Afterfall API"
+}

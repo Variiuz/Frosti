@@ -2,7 +2,7 @@ import { Client, Collection } from 'discord.js';
 import { readdirSync } from 'fs';
 const client = new Client();
 var avatar = '';
-import { presence, prefix, token } from './CONFIG.json';
+import { presence, prefix, token } from './BotConfig.json';
 const shardServer = client.shard;
 client.commands = new Collection();
 const cooldowns = new Collection();
@@ -23,7 +23,7 @@ client.on('ready', async () => {
 			console.log('ShardClient (id '+shardServer.id+') hooking into ' + client.user.username + ' with '+ totalGuilds+ ' Guilds and '+ totalMembers+ ' Members in total.');
 			}).catch(console.error);
   client.user.setActivity(presence.text, {
-		"type": presence.statuscode
+		"type": presence.type
 	});
   avatar = client.user.avatarURL;
 });

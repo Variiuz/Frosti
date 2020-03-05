@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const client2 = new Discord.Client();
-const config = require('../CONFIG.json');
+const config = require('../BotConfig.json');
 const fetch = require('node-fetch');
 var deleteMessage = false;
 async function getTitle(id) {
