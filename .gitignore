@@ -5,3 +5,4 @@
 *.pem
 /nodemon.json
 /CONFIG.json.mk
+/package-lock.json
