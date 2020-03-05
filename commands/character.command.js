@@ -95,11 +95,7 @@ module.exports = {
                     
                     console.log(err);
                 });
-        }else if(args.length === 0){
-            embedded.setColor(config.color)
-            .setDescription('Please give me a Charactername for the search.');
-            message.channel.send(embedded);
-        }else {
+        } else {
             embedded.setColor(config.color)
             .setDescription('Please give me a Charactername for the search.');
             message.channel.send(embedded);
