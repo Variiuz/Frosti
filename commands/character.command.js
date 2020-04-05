@@ -13,6 +13,9 @@ async function getTitle(id) {
     let data = await response.json()
     return response.status
 }
+
+var exports = module.exports = {};
+const util = require('util');
 module.exports = {
     name: "character",
     cooldown: 10,
@@ -24,7 +27,6 @@ module.exports = {
             var body = null;
             let status;
             console.log(querystring);
-            
             fetch(`https://api.afterfall-game.com/v3/api/search/character/name/`+querystring, {
                 headers: {
                      'Content-Type': 'application/json',
@@ -68,6 +70,7 @@ module.exports = {
                             }else {
                                 charTitle = "Unknown";
                             }
+                            
                             embedded.setColor(config.color)
                             .setTitle('Character '+charName)
                             .setDescription('Information about  '+charName)
@@ -78,7 +81,8 @@ module.exports = {
                             .addField('Playtime', charPlayTime, true)
                             .addField('Created', charCreatedAt.split('T')[0], true)
                             .setTimestamp()
-                            .setFooter('requested by ' +message.author.username, message.author.avatarURL);
+                            .setFooter('requested by ' +message.author.username, message.author.avatarURL)
+                            .attachFile([img]);
                             message.channel.send(embedded);
                         }).catch(err => {
                             embedded.setColor(config.color)

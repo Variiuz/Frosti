@@ -7,6 +7,8 @@ const shardServer = client.shard;
 client.commands = new Discord.Collection();
 const cooldowns = new Discord.Collection();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+let message_id = '695935661596868618'
+let channel_id = '695933930578247740'
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
 	client.commands.set(command.name, command);
@@ -25,8 +27,29 @@ client.on('ready', async () => {
   client.user.setActivity(config.presence.text, {
 		"type": config.presence.type
 	});
+	client.channels.get(channel_id).fetchMessage(message_id).then(m => {
+        console.log("Cached reaction message.");
+    }).catch(e => {
+		console.error("Error loading message.");
+		console.error(e);
+    });
   avatar = client.user.avatarURL;
 });
+client.on('messageReactionAdd', (reaction, user) => {
+	if(reaction.emoji.name == "✅" && reaction.message.id === message_id) {
+		reaction.message.guild.fetchMember(user)
+			.then((member) => {
+				if(!member.roles.find('id','695928653904740443')){
+					member.addRole('695928653904740443').catch(err => {
+					});
+					member.createDM().then(createdDM =>{
+						createdDM.send('You accepted the Rules, have fun. <:pikaup:671103142217252865>');
+					});
+				}
+		});
+	}
+});
+
 client.on('userUpdate', (oldUser, newUser)=> {
 	if(newUser.username === 'here' || newUser.username === 'heree' || newUser.username === 'hereee' || newUser.username === 'everyone'|| newUser.username === 'everyonee'|| newUser.username === 'everyoneee'){
 		newUser.createDM().then(createdDM =>{
@@ -34,6 +57,7 @@ client.on('userUpdate', (oldUser, newUser)=> {
 		});
 	}
 });
+
 //https://discordapp.com/oauth2/authorize?client_id=564484610583691264&permissions=8&scope=bot
 client.on('message', message => {
 
