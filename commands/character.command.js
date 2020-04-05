@@ -81,8 +81,7 @@ module.exports = {
                             .addField('Playtime', charPlayTime, true)
                             .addField('Created', charCreatedAt.split('T')[0], true)
                             .setTimestamp()
-                            .setFooter('requested by ' +message.author.username, message.author.avatarURL)
-                            .attachFile([img]);
+                            .setFooter('requested by ' +message.author.username, message.author.avatarURL);
                             message.channel.send(embedded);
                         }).catch(err => {
                             embedded.setColor(config.color)
