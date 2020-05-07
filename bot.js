@@ -24,19 +24,19 @@ client.on('ready', async () => {
 			const totalMembers = results[1].reduce((prev, memberCount) => prev + memberCount, 0);
 			console.log('ShardClient (id '+shardServer.id+') hooking into ' + client.user.username + ' with '+ totalGuilds+ ' Guilds and '+ totalMembers+ ' Members in total.');
 			}).catch(console.error);
-  client.user.setActivity(config.presence.text, {
+  		client.user.setActivity(config.presence.text, {
 		"type": config.presence.type
-	});
-	client.channels.get(channel_id).fetchMessage(message_id).then(m => {
-        console.log("Cached reaction message.");
-    }).catch(e => {
-		console.error("Error loading message.");
-		console.error(e);
-    });
+		});
+		client.channels.get(channel_id).fetchMessage(message_id).then(m => {
+			console.log("Cached reaction message.");
+		}).catch(e => {
+			console.error("Error loading message.");
+		});
+
   avatar = client.user.avatarURL;
 });
 client.on('messageReactionAdd', (reaction, user) => {
-	if(reaction.emoji.name == "✅" && reaction.message.id === message_id) {
+	if(reaction.emoji.name === "✅" && reaction.message.id === message_id) {
 		reaction.message.guild.fetchMember(user)
 			.then((member) => {
 				if(!member.roles.find('id','695928653904740443')){
@@ -46,6 +46,13 @@ client.on('messageReactionAdd', (reaction, user) => {
 						createdDM.send('You accepted the Rules, have fun. <:pikaup:671103142217252865>');
 					});
 				}
+		});
+	}
+});
+client.on('guildMemberAdd', (user) => {
+	if(user.guild.id === '500356704446316567') {
+		user.createDM().then(createdDM => {
+			createdDM.send('Please read #welcome-new-users to accept our Rules and begin chatting <:pikaup:671103142217252865>');
 		});
 	}
 });

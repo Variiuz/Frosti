@@ -10,5 +10,6 @@
         "type": "PLAYING"
     },
     "color": "#1da1f2",
-    "AfterfallToken": "Token for the access to the Afterfall API"
+    "AfterfallToken": "Token for the access to the Afterfall API",
+    "AdminRoleId": ""
 }

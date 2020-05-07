@@ -2,8 +2,8 @@
 /node_modules/*
 
 #We don't want Keys to be leaked right ^^
-*.pem
 /nodemon.json
 /CONFIG.json.mk
 /package-lock.json
 /BotConfig.json
+/.idea/*
